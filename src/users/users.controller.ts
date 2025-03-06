@@ -11,6 +11,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   Req,
   Res,
   UsePipes,
@@ -21,6 +22,7 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserEntity } from './user.entity';
 import { v4 as uuid } from 'uuid';
+import { CustomValidationPipe } from './pipes/validation.pipe';
 
 @Controller('users')
 // @UsePipes(ValidationPipe)
@@ -29,7 +31,11 @@ export class UsersController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAllUsers(): UserEntity[] {
+  findAllUsers(
+    @Query('username', CustomValidationPipe) username: string,
+  ): UserEntity[] {
+    console.log(username);
+
     return this.users;
   }
 
