@@ -5,38 +5,29 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  NotFoundException,
   Param,
-  ParseIntPipe,
   ParseUUIDPipe,
   Patch,
   Post,
   Query,
-  Req,
-  Res,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserEntity } from './user.entity';
-import { v4 as uuid } from 'uuid';
 import { CustomValidationPipe } from './pipes/validation.pipe';
+import { UsersService } from './users.service';
 
 @Controller('users')
 // @UsePipes(ValidationPipe)
 export class UsersController {
-  private users: UserEntity[] = [];
+  constructor(private readonly usersService: UsersService) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
   findAllUsers(
     @Query('username', CustomValidationPipe) username: string,
   ): UserEntity[] {
-    console.log(username);
-
-    return this.users;
+    return this.usersService.findUsers();
   }
 
   @Get(':id')
@@ -45,11 +36,7 @@ export class UsersController {
     @Param('id', ParseUUIDPipe)
     id: string,
   ): UserEntity {
-    const user = this.users.find((user) => user.id === id);
-    if (!user) {
-      throw new NotFoundException(`User with id ${id} not found`);
-    }
-    return user;
+    return this.usersService.findUserById(id);
   }
 
   // @Post()
@@ -81,14 +68,7 @@ export class UsersController {
     @Body()
     createUserDto: CreateUserDto,
   ): CreateUserDto {
-    const newUser: UserEntity = {
-      ...createUserDto,
-      id: uuid(),
-    };
-
-    this.users.push(newUser);
-
-    return newUser;
+    return this.usersService.createUser(createUserDto);
   }
 
   // Patch for update specific field in object
@@ -101,13 +81,7 @@ export class UsersController {
     @Body()
     updateUserDto: UpdateUserDto,
   ): UpdateUserDto {
-    // 1) find element index that we want to update
-    const index = this.users.findIndex((user) => user.id === id);
-
-    // 2) update the element
-    this.users[index] = { ...this.users[index], ...updateUserDto };
-
-    return this.users[index];
+    return this.usersService.updateUser(id, updateUserDto);
   }
 
   // @Delete(':username')
@@ -118,14 +92,6 @@ export class UsersController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', ParseUUIDPipe) id: string): { message: string } {
-    const initialLength = this.users.length;
-
-    this.users = this.users.filter((user) => user.id !== id);
-
-    if (this.users.length === initialLength) {
-      throw new NotFoundException(`User with id ${id} not found`);
-    }
-
-    return { message: 'Deleted successfully' };
+    return this.usersService.deleteUser(id);
   }
 }
