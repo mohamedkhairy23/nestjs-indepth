@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { UserEntity } from './user.entity';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -6,9 +6,13 @@ import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class UsersService {
+  constructor(@Inject('APP_NAME') private appName: string) {}
+
   private users: UserEntity[] = [];
 
   findUsers(): UserEntity[] {
+    console.log(this.appName);
+
     return this.users;
   }
 
