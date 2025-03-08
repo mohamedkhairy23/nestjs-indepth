@@ -9,6 +9,10 @@ class MockUserService {
   }
 }
 
+abstract class ConfigService {}
+class DevelopmentConfigService extends ConfigService {}
+class ProductionConfigService extends ConfigService {}
+
 @Module({
   controllers: [UsersController],
   // Standard Provider
@@ -23,15 +27,25 @@ class MockUserService {
     // Standard Provider
     UsersService,
     // Custom Provider
+    // value based provider
     // {
     //   provide: UsersService,
     //   // Value provider: Inject constant value or for testing purposes
     //   useValue: new MockUserService(),
     // },
+    // value based provider
     {
       provide: APP_NAME,
       // Value provider: Inject constant value or for testing purposes
       useValue: 'Nest Demo APP',
+    },
+    // class based provider (Provide class as a token and resolve class)
+    {
+      provide: ConfigService,
+      useClass:
+        process.env.NODE_ENV === 'development'
+          ? DevelopmentConfigService
+          : ProductionConfigService,
     },
   ],
 })
