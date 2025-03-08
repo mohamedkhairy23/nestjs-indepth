@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Injectable, Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { APP_NAME, USER_HABITS } from './user.constants';
+import { APP_NAME, LoggerServiceAlias, USER_HABITS } from './user.constants';
 
 class MockUserService {
   findUsers() {
@@ -18,6 +18,16 @@ class UserHabitsFactory {
     return ['eat', 'sleep', 'code'];
   }
 }
+
+@Injectable()
+class LoggerService {
+  // logic here
+}
+
+const loggerServiceAliasProvider = {
+  provide: LoggerServiceAlias,
+  useExisting: LoggerService,
+};
 
 @Module({
   controllers: [UsersController],
@@ -65,6 +75,9 @@ class UserHabitsFactory {
       useFactory: (userHabits: UserHabitsFactory) => ['eat', 'sleep', 'code'],
       inject: [UserHabitsFactory],
     },
+    // Alias Provider
+    LoggerService,
+    loggerServiceAliasProvider,
   ],
 })
 export class UsersModule {}
