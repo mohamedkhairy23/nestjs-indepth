@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { APP_NAME } from './user.constants';
+import { APP_NAME, USER_HABITS } from './user.constants';
 
 class MockUserService {
   findUsers() {
@@ -12,6 +12,12 @@ class MockUserService {
 abstract class ConfigService {}
 class DevelopmentConfigService extends ConfigService {}
 class ProductionConfigService extends ConfigService {}
+
+class UserHabitsFactory {
+  getHabits() {
+    return ['eat', 'sleep', 'code'];
+  }
+}
 
 @Module({
   controllers: [UsersController],
@@ -46,6 +52,18 @@ class ProductionConfigService extends ConfigService {}
         process.env.NODE_ENV === 'development'
           ? DevelopmentConfigService
           : ProductionConfigService,
+    },
+    // factory based provider (simple factory function (Not depend on other providers))
+    {
+      provide: USER_HABITS,
+      useFactory: () => ['eat', 'sleep', 'code'],
+    },
+    // factory based provider (complexity factory function (depend on other providers))
+    UserHabitsFactory, // that is the new provide that complexity factory depend on It
+    {
+      provide: USER_HABITS,
+      useFactory: (userHabits: UserHabitsFactory) => ['eat', 'sleep', 'code'],
+      inject: [UserHabitsFactory],
     },
   ],
 })

@@ -3,17 +3,23 @@ import { UserEntity } from './user.entity';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { v4 as uuid } from 'uuid';
-import { APP_NAME } from './user.constants';
+import { APP_NAME, USER_HABITS } from './user.constants';
 
 @Injectable()
 export class UsersService {
-  constructor(@Inject(APP_NAME) private appName: string) {}
+  constructor(
+    @Inject(APP_NAME) private appName: string,
+    @Inject(USER_HABITS) private userHabits: string[],
+  ) {
+    console.log(this.appName);
+    console.log(this.userHabits);
+  }
 
   private users: UserEntity[] = [];
 
   findUsers(): UserEntity[] {
     console.log(this.appName);
-
+    console.log(this.userHabits);
     return this.users;
   }
 
