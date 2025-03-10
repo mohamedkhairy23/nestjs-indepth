@@ -29,6 +29,13 @@ const loggerServiceAliasProvider = {
   useExisting: LoggerService,
 };
 
+@Injectable()
+class DatabaseConnection {
+  async connectTodB(): Promise<string> {
+    return await Promise.resolve('Conneted to db successfully');
+  }
+}
+
 @Module({
   controllers: [UsersController],
   // Standard Provider
@@ -72,12 +79,22 @@ const loggerServiceAliasProvider = {
     UserHabitsFactory, // that is the new provide that complexity factory depend on It
     {
       provide: USER_HABITS,
-      useFactory: (userHabits: UserHabitsFactory) => ['eat', 'sleep', 'code'],
-      inject: [UserHabitsFactory],
+      useFactory: async (
+        userHabits: UserHabitsFactory,
+        dbConnection: DatabaseConnection,
+      ) => {
+        const dbStatus = await dbConnection.connectTodB();
+        console.log(dbStatus);
+
+        return userHabits.getHabits();
+      },
+      inject: [UserHabitsFactory, DatabaseConnection],
     },
     // Alias Provider
     LoggerService,
     loggerServiceAliasProvider,
   ],
+  // export custom provider by its token
+  exports: [USER_HABITS],
 })
 export class UsersModule {}
