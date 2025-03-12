@@ -76,6 +76,7 @@ class DatabaseConnection {
       useFactory: () => ['eat', 'sleep', 'code'],
     },
     // factory based provider (complexity factory function (depend on other providers))
+    DatabaseConnection, // provider with USER_HABITS will depend on DatabaseConnection provider
     UserHabitsFactory, // that is the new provide that complexity factory depend on It
     {
       provide: USER_HABITS,
