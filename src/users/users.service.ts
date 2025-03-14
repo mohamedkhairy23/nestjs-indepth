@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dtos/update-user.dto';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { v4 as uuid } from 'uuid';
 import { APP_NAME, LoggerServiceAlias, USER_HABITS } from './user.constants';
+import { UserResponseDto } from './dtos/user-response.dto';
 
 @Injectable()
 export class UsersService {
@@ -19,23 +20,19 @@ export class UsersService {
 
   private users: UserEntity[] = [];
 
-  findUsers(): UserEntity[] {
-    // console.log(this.appName);
-    // console.log(this.userHabits);
-    // console.log(this.loggerService);
-
-    return this.users;
+  findUsers(): UserResponseDto[] {
+    return this.users.map((user) => new UserResponseDto(user));
   }
 
-  findUserById(id: string): UserEntity {
+  findUserById(id: string): UserResponseDto {
     const user = this.users.find((user) => user.id === id);
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
-    return user;
+    return new UserResponseDto(user);
   }
 
-  createUser(createUserDto: CreateUserDto): UserEntity {
+  createUser(createUserDto: CreateUserDto): UserResponseDto {
     const newUser: UserEntity = {
       ...createUserDto,
       id: uuid(),
@@ -43,17 +40,17 @@ export class UsersService {
 
     this.users.push(newUser);
 
-    return newUser;
+    return new UserResponseDto(newUser);
   }
 
-  updateUser(id: string, updateUserDto: UpdateUserDto): UserEntity {
+  updateUser(id: string, updateUserDto: UpdateUserDto): UserResponseDto {
     // 1) find element index that we want to update
     const index = this.users.findIndex((user) => user.id === id);
 
     // 2) update the element
     this.users[index] = { ...this.users[index], ...updateUserDto };
 
-    return this.users[index];
+    return new UserResponseDto(this.users[index]);
   }
 
   deleteUser(id: string): { message: string } {

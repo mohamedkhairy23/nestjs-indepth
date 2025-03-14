@@ -16,6 +16,7 @@ import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserEntity } from './user.entity';
 import { CustomValidationPipe } from './pipes/validation.pipe';
 import { UsersService } from './users.service';
+import { UserResponseDto } from './dtos/user-response.dto';
 
 @Controller('users')
 // @UsePipes(ValidationPipe)
@@ -26,7 +27,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   findAllUsers(
     @Query('username', CustomValidationPipe) username: string,
-  ): UserEntity[] {
+  ): UserResponseDto[] {
     return this.usersService.findUsers();
   }
 
@@ -35,7 +36,7 @@ export class UsersController {
   findOne(
     @Param('id', ParseUUIDPipe)
     id: string,
-  ): UserEntity {
+  ): UserResponseDto {
     return this.usersService.findUserById(id);
   }
 
@@ -67,7 +68,7 @@ export class UsersController {
   createUser(
     @Body()
     createUserDto: CreateUserDto,
-  ): CreateUserDto {
+  ): UserResponseDto {
     return this.usersService.createUser(createUserDto);
   }
 
@@ -80,7 +81,7 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body()
     updateUserDto: UpdateUserDto,
-  ): UpdateUserDto {
+  ): UserResponseDto {
     return this.usersService.updateUser(id, updateUserDto);
   }
 
