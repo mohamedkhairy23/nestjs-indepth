@@ -5,6 +5,7 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { v4 as uuid } from 'uuid';
 import { APP_NAME, LoggerServiceAlias, USER_HABITS } from './user.constants';
 import { UserResponseDto } from './dtos/user-response.dto';
+import { CustomHttpExcepion } from 'src/common/exceptions/custom-http.exception';
 
 @Injectable()
 export class UsersService {
@@ -28,6 +29,7 @@ export class UsersService {
     const user = this.users.find((user) => user.id === id);
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
+      // throw new CustomHttpExcepion();
     }
     return new UserResponseDto(user);
   }
