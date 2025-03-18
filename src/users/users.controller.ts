@@ -33,8 +33,8 @@ export class UsersController {
     @Query('username', CustomValidationPipe) username: string,
   ): Promise<UserResponseDto[]> {
     // delay 5 seconds
-    console.log(req.body);
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    // console.log(req.body);
+    // await new Promise((resolve) => setTimeout(resolve, 5000));
 
     return this.usersService.findUsers();
   }

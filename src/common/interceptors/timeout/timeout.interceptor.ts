@@ -20,10 +20,10 @@ export class TimeoutInterceptor implements NestInterceptor {
     // Logic on current request, (Before method execution)
 
     // To apply logic on request
-    const ctx = context.switchToHttp();
-    const request = ctx.getRequest<Request>();
+    // const ctx = context.switchToHttp();
+    // const request = ctx.getRequest<Request>();
 
-    request.body = { ...request.body, username: 'Test user' };
+    // request.body = { ...request.body, username: 'Test user' };
 
     // handle to apply logic on response
     return next.handle().pipe(
