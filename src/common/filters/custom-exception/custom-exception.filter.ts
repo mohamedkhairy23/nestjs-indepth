@@ -25,6 +25,9 @@ export class CustomExceptionFilter<T extends HttpException>
         ? { message: exceptionResponse }
         : (exceptionResponse as object);
 
+    // use sentry to send error
+    // sentry.log(error)
+
     response.status(status).json({
       ...error,
       statusCode: status,
