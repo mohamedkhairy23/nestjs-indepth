@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UserEntity } from './user.entity';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -29,7 +34,10 @@ export class UsersService {
     const user = this.users.find((user) => user.id === id);
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
-      // throw new CustomHttpExcepion();
+      // throw new CustomHttpExcepion(
+      //   `User with id ${id} not found`,
+      //   HttpStatus.NOT_FOUND,
+      // );
     }
     return new UserResponseDto(user);
   }
