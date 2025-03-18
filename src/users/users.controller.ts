@@ -10,13 +10,16 @@ import {
   Patch,
   Post,
   Query,
+  Req,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { UserEntity } from './user.entity';
 import { CustomValidationPipe } from './pipes/validation.pipe';
 import { UsersService } from './users.service';
 import { UserResponseDto } from './dtos/user-response.dto';
+import { Request } from 'express';
 
 @Controller('users')
 // @UsePipes(ValidationPipe)
@@ -25,9 +28,14 @@ export class UsersController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAllUsers(
+  async findAllUsers(
+    @Req() req: Request,
     @Query('username', CustomValidationPipe) username: string,
-  ): UserResponseDto[] {
+  ): Promise<UserResponseDto[]> {
+    // delay 5 seconds
+    console.log(req.body);
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
     return this.usersService.findUsers();
   }
 
