@@ -11,6 +11,8 @@ import {
   Post,
   Query,
   Req,
+  SetMetadata,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -20,12 +22,16 @@ import { CustomValidationPipe } from './pipes/validation.pipe';
 import { UsersService } from './users.service';
 import { UserResponseDto } from './dtos/user-response.dto';
 import { Request } from 'express';
+import { AuthGuard } from 'src/common/guards/auth/auth.guard';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('users')
 // @UsePipes(ValidationPipe)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  // @SetMetadata('IS_Public', true)
+  @Public()
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAllUsers(
@@ -39,6 +45,7 @@ export class UsersController {
     return this.usersService.findUsers();
   }
 
+  @Public()
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   findOne(
@@ -70,6 +77,7 @@ export class UsersController {
   //   return newUser;
   // }
 
+  // @UseGuards(AuthGuard)
   @Post()
   // @UsePipes(new ValidationPipe({ groups: ['create'] }))
   @HttpCode(HttpStatus.CREATED)
