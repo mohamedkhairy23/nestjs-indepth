@@ -96,6 +96,6 @@ class DatabaseConnection {
     loggerServiceAliasProvider,
   ],
   // export custom provider by its token
-  exports: [USER_HABITS],
+  exports: [USER_HABITS, UsersService],
 })
 export class UsersModule {}
