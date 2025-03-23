@@ -42,6 +42,8 @@ export class UsersController {
     // console.log(req.body);
     // await new Promise((resolve) => setTimeout(resolve, 5000));
 
+    console.log(process.env.DATABASE_URI);
+
     return this.usersService.findUsers();
   }
 

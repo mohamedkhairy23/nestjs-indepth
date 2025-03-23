@@ -13,9 +13,21 @@ import { AuthGuard } from './common/guards/auth/auth.guard';
 import { CommonModule } from './common/common.module';
 import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware';
 import { UsersController } from './users/users.controller';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [UsersModule, CommonModule],
+  imports: [
+    UsersModule,
+    CommonModule,
+    ConfigModule.forRoot({
+      envFilePath:
+        process.env.NODE_ENV === 'development'
+          ? 'config/.development.env'
+          : process.env.NODE_ENV === 'staging'
+            ? 'config/.staging.env'
+            : 'config/.production.env',
+    }),
+  ],
   providers: [
     // interceptor to enable transformation operations global like exclude and expose
     {
