@@ -26,6 +26,9 @@ import { ConfigModule } from '@nestjs/config';
           : process.env.NODE_ENV === 'staging'
             ? 'config/.staging.env'
             : 'config/.production.env',
+      // ignoreEnvFile: true,
+      // to can access env variables in other modules we use isGlobal option (isGlobal:true)
+      isGlobal: true,
     }),
   ],
   providers: [
