@@ -14,6 +14,9 @@ import { CommonModule } from './common/common.module';
 import { LoggerMiddleware } from './common/middlewares/logger/logger.middleware';
 import { UsersController } from './users/users.controller';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import ormConfig from './config/orm.config';
+import ormConfigProd from './config/orm.config.prod';
 
 @Module({
   imports: [
@@ -29,6 +32,12 @@ import { ConfigModule } from '@nestjs/config';
       // ignoreEnvFile: true,
       // to can access env variables in other modules we use isGlobal option (isGlobal:true)
       isGlobal: true,
+      // to can access ormConfig file and ormConfigProd file based on NODE_ENV we must sent it in load option array from ConfigModule
+      load: [ormConfig, ormConfigProd],
+    }),
+    TypeOrmModule.forRootAsync({
+      useFactory:
+        process.env.NODE_ENV === 'development' ? ormConfig : ormConfigProd,
     }),
   ],
   providers: [

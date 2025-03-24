@@ -24,11 +24,15 @@ import { UserResponseDto } from './dtos/user-response.dto';
 import { Request } from 'express';
 import { AuthGuard } from 'src/common/guards/auth/auth.guard';
 import { Public } from 'src/common/decorators/public.decorator';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('users')
 // @UsePipes(ValidationPipe)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly configService: ConfigService,
+  ) {}
 
   // @SetMetadata('IS_Public', true)
   @Public()
@@ -42,7 +46,11 @@ export class UsersController {
     // console.log(req.body);
     // await new Promise((resolve) => setTimeout(resolve, 5000));
 
-    console.log(process.env.DATABASE_URI);
+    // console.log(process.env.DATABASE_HOST);
+    console.log(
+      'Database Host:',
+      this.configService.get<string>('DATABASE_HOSTt', 'root'),
+    );
 
     return this.usersService.findUsers();
   }
